@@ -1,0 +1,19 @@
+# Ignore GIS/OSGeo temporary lock files
+*.sr.lock
+*.shp.*.sr.lock
+# Common shapefile helper/temp files
+*.shp.repair
+
+# Ignore Python cache and editor folders
+__pycache__/
+*.pyc
+.vscode/
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore user output folders that may contain generated data
+# Uncomment if you want to ignore whole out_dir
+# out_dir/
