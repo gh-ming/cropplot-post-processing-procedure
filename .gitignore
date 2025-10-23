@@ -16,4 +16,4 @@ Thumbs.db
 
 # Ignore user output folders that may contain generated data
 # Uncomment if you want to ignore whole out_dir
-# out_dir/
+out_dir/
