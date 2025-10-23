@@ -149,6 +149,48 @@ conda install -c conda-forge gdal scikit-image scipy matplotlib opencv numpy pan
 
 -----
 
+  ### **4.4 使用入口脚本 main.py（推荐）**
+
+  本项目自带 `main.py` 作为统一入口，默认按顺序运行完整管线：thinning -> smooth -> filter。该脚本方便快速运行与参数传递，也支持只运行单个阶段。
+
+  示例：
+
+  - 完整运行（使用 README 中示例路径）：
+
+  ```
+  python main.py
+  ```
+
+  - 指定输入/输出并保留中间结果：
+
+  ```
+  python main.py --in_raster edge_map/GF_NM_T48TXL_E67970_N450984.tif --mask cropland/GF_NM_T48TXL_E67970_N450984.tif --out_dir out_dir --keep
+  ```
+
+  - 只运行单个阶段（例如只运行 smooth）：
+
+  ```
+  python main.py --step smooth --out_dir out_dir
+  ```
+
+  - dry-run（仅打印将执行的命令，不实际运行）：
+
+  ```
+  python main.py --dry-run
+  ```
+
+  常用选项说明：
+
+  - `--in_raster`: 输入边缘概率图（默认仓库里有示例路径）。
+  - `--mask`: 耕地掩膜（filter 阶段需要）。
+  - `--out_dir`: 输出目录（默认 `out_dir`）。
+  - `--keep`: 是否保留中间结果（默认不保留）。
+  - `--step`: 只运行单个阶段（thinning/smooth/filter）。
+  - `--extra`: 向底层脚本传递额外参数（示例: `--extra "--sigma 2 --tolerance 3"`）。
+
+  注意：单阶段运行模式 (`--step`) 要求相应的输入存在（例如 `smooth` 需要 `thinning` 的输出）。
+
+
 ## 📚 5. 引用 (Citation)
 
 如果本项目对您的研究有所帮助，请考虑引用以下内容：
