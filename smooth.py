@@ -175,22 +175,26 @@ def simplify_and_smooth_parcels(
 
     in_ds, out_ds = None, None
     print(f"✅ 两阶段处理完成 → {output_shp}")
-
-# --- 使用示例 ---
-# 假设原始矢量化结果是 'parcels_raw.shp'
-input_raw_shp = r"F:\CSCT-HD\test\parcel\test3.shp"
-output_final_shp = r"F:\CSCT-HD\test\parcel\test3_final_smooth4.shp"
-TARGET_UTM_EPSG_CODE = 32650 # 示例：WGS 84 / UTM zone 50N
-
-simplify_and_smooth_parcels(
-    input_shp=input_raw_shp,
-    output_shp=output_final_shp,
-    target_utm_epsg=TARGET_UTM_EPSG_CODE,
-    simplify_tolerance=2,  # 2米容差，用于消除像素级锯齿，根据分辨率调整，容差越大越平滑
-    smooth_window_size=3,    # 3点窗口平滑,窗口越大平滑效果越明显但也会导致边界偏移丢失细节
-    smooth_strength=0.5,      # 0.5强度平滑
-    corner_angle_threshold=160 # 角点保护阈值，单位：度
-)
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Parcel Simplify and Smooth Script')
+    parser.add_argument('--input_shp', type=str, required=True, help='输入地块矢量文件（Shapefile）')
+    parser.add_argument('--output_shp', type=str, required=True, help='输出平滑后的地块矢量文件（Shapefile）')
+    parser.add_argument('--target_utm_epsg', type=int, default=32650, help='目标UTM投影的EPSG代码（例如：32650）')
+    parser.add_argument('--simplify_tolerance', type=float, default=2.0, help='简化容差（米），用于消除锯齿')
+    parser.add_argument('--smooth_window_size', type=int, default=3, help='平滑窗口大小（奇数>=3）')
+    parser.add_argument('--smooth_strength', type=float, default=0.5, help='平滑强度(0~1)')
+    parser.add_argument('--corner_angle_threshold', type=float, default=160.0, help='角点保护阈值（度）')
+    args = parser.parse_args()
+    simplify_and_smooth_parcels(
+        input_shp=args.input_shp,
+        output_shp=args.output_shp,
+        target_utm_epsg=args.target_utm_epsg,
+        simplify_tolerance=args.simplify_tolerance,  # 2米容差，用于消除像素级锯齿，根据分辨率调整，容差越大越平滑
+        smooth_window_size=args.smooth_window_size,    # 3点窗口平滑,窗口越大平滑效果越明显但也会导致边界偏移丢失细节
+        smooth_strength=args.smooth_strength,      # 0.5强度平滑
+        corner_angle_threshold=args.corner_angle_threshold # 角点保护阈值，单位：度
+    )
 
 
 

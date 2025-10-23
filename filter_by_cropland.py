@@ -79,10 +79,19 @@ def filter_parcels_by_mask_gdal(parcel_shp, mask_tif, threshold=0.5, output_shp=
     print(f"✅ 过滤完成，输出地块数：{out_lyr.GetFeatureCount()}")
     shp_ds, mask_ds = None, None
     return out_ds
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Filter Parcels by Cropland Mask') 
+    parser.add_argument('--parcel_shp', type=str, required=True, help='输入地块矢量文件（Shapefile）')
+    parser.add_argument('--mask_tif', type=str, required=True, help='耕地掩膜文件（GeoTIFF）')
+    parser.add_argument('--threshold', type=float, default=0.8, help='重叠比例阈值（0~1）')
+    parser.add_argument('--output_shp', type=str, required=True, help='输出过滤后的地块矢量文件（Shapefile）')
+    args = parser.parse_args()
 
+    filter_parcels_by_mask_gdal(
+        args.parcel_shp,    
+        args.mask_tif,
+        threshold=args.threshold,
+        output_shp=args.output_shp
+    )
 
-# 示例调用
-parcel_shp = r"F:\CSCT-HD\test\parcel\ptest3_smooth_simplified.shp"
-mask_tif = r"F:\CSCT-HD\test\cropland\GF_NM_T48TXL_E67973_N450835.tif"
-output_shp = r"F:\CSCT-HD\test\parcel\ptest3_smooth_simplifiedfiltered.shp"
-filter_parcels_by_mask_gdal(parcel_shp, mask_tif, threshold=0.8, output_shp=output_shp)

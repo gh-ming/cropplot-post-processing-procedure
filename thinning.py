@@ -183,12 +183,7 @@ def line2shp(raster_filename, shapefile_filename, pred_band=1):
     gdal.Polygonize(band, band, layer, 0)
     del shape_dataset
 
-
-if __name__ == '__main__':
-    in_raster = r"F:\CSCT-HD\test\edge\GF_NM_T48TXL_E67973_N450835.tif"
-    output_raster = r'F:\CSCT-HD\test\parcel\test4.tif'
-    shapefile_filename = r'F:\CSCT-HD\test\parcel\test4.shp'
-
+def main(in_raster, shapefile_filename):
     # 1. 读取边界强度图，并计算内部区域掩码
     image = gdal.Open(in_raster).ReadAsArray()
     edge_intensity_map = 255 - image # 输入的是“反转”的边缘图，即边界为暗(值低)，地块为亮(值高)
@@ -233,6 +228,7 @@ if __name__ == '__main__':
 
 
     # 4. 保存结果为栅格和矢量
+    output_raster = shapefile_filename.replace('.shp', '.tif')
     driver = gdal.GetDriverByName('GTiff')  
     out_raster = driver.Create(output_raster, skeleton_img.shape[1], skeleton_img.shape[0], 1, gdal.GDT_UInt32)
     out_raster.SetGeoTransform(gt)
@@ -240,3 +236,14 @@ if __name__ == '__main__':
     out_raster.GetRasterBand(1).WriteArray(result)
     out_raster.FlushCache()
     line2shp(output_raster, shapefile_filename, pred_band=1)
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Parcel Thinning Script')
+    parser.add_argument('--in_raster', type=str, required=True, help='输入边缘概率图（GeoTIFF）')
+    parser.add_argument('--out_shp', type=str, required=True, help='输出矢量边界文件（Shapefile）')
+    args = parser.parse_args()
+
+    main(args.in_raster,args.out_shp)
+
