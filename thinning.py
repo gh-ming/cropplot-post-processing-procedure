@@ -235,6 +235,7 @@ def main(in_raster, shapefile_filename):
     out_raster.SetProjection(src.GetProjection())
     out_raster.GetRasterBand(1).WriteArray(result)
     out_raster.FlushCache()
+    out_raster = None
     line2shp(output_raster, shapefile_filename, pred_band=1)
 
 
